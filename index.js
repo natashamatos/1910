@@ -88,6 +88,24 @@ app.get("/Cliente/perfil", autenticar, async (req, res)=>{
     }
 })
 
+app.get("/produto", async (req, res) => {
+    try {
+        //query parameter
+        const {busca} = req.query
+        let resultado
+        if (busca) {
+            resultado = await db.pool.query(
+                "SELEC * FROM produto WHERE nome LIKE ?",
+                ["%" + busca + "%"])
+        } else { 
+            resultado = await db.pool.query("SELECT * FROM produto")
+        }
+        res.status(200).json(resultado[0])
+    } catch (error) {
+        res.status(500).json({erro: error.message})
+    }
+})
+
 app.listen(port, () =>{
     console.log("Api rodando porta: " + port )
 })
